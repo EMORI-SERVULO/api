@@ -5,10 +5,7 @@ from fastapi.security.api_key import APIKeyHeader, APIKeyQuery, APIKeyCookie
 from starlette import status
 import os
 from pydantic import BaseModel, Field
-from dotenv import load_dotenv
-import pandas as pd
-import requests
-load_dotenv()
+
 
 version = os.getenv('VERSION', 'dev-prueba')
 
@@ -75,8 +72,8 @@ def create_solicitud(request: Request, item: solicitud,
         apellido=item.apellido,
         identificacion=item.identificacion,
         edad=item.edad,
-        afinidad=item.afinidad,
-        )
+        afinidad=item.afinidad
+    )
 
     return result
 
@@ -89,23 +86,25 @@ def update_solicitud(id: int, item: solicitud,
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated")
     build = services()
-    result = build.updateSolicitud(id=id,nombre=item.nombre,
-        apellido=item.apellido,
-        identificacion=item.identificacion,
-        edad=item.edad,
-        afinidad=item.afinidad)
+    result = build.updateSolicitud(id=id, nombre=item.nombre,
+                                   apellido=item.apellido,
+                                   identificacion=item.identificacion,
+                                   edad=item.edad,
+                                   afinidad=item.afinidad)
     return result
 
+
 @app.put("/estatus/{id}")
-def estatus(id: int, estatus:str, api_key: bool = Depends(get_api_key)):
+def estatus(id: int, estatus: str, api_key: bool = Depends(get_api_key)):
     if not api_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated")
     build = services()
 
-    result = build.updatestatus(id,estatus)
+    result = build.updatestatus(id, estatus)
     return result
+
 
 @app.get("/solicitud")
 def create_solicitud(api_key: bool = Depends(get_api_key)):
@@ -113,7 +112,7 @@ def create_solicitud(api_key: bool = Depends(get_api_key)):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Not authenticated")
-    
+
     build = services()
     result = build.get_solicitud()
     return result
